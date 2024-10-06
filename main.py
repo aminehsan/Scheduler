@@ -1,18 +1,20 @@
-from datetime import datetime, timedelta
-from time import sleep
-from schedule import repeat, every, run_pending
+import traceback
+import datetime
+import time
+import schedule
 
 if __name__ == '__main__':
 
-    @repeat(every().friday.at('23:00', tz='Asia/Tehran'))
-    def job():
+    @schedule.repeat(schedule.every().friday.at('22:00', tz='Asia/Tehran'), tasks='Tasks-1')
+    @schedule.repeat(schedule.every().friday.at('23:00', tz='Asia/Tehran'), tasks='Tasks-2')
+    def job(task):
         try:
-            now = datetime.now()
-            print(now)
-        except Exception as e:
-            print(e)
+            now = datetime.datetime.now()
+            print(now.strftime('%Y-%m-%d %H:%M:%S'), task)
+        except Exception:
+            traceback.print_exc()
 
 
     while True:
-        run_pending()
-        sleep(1)
+        schedule.run_pending()
+        time.sleep(1)
